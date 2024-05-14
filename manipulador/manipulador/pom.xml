@@ -11,4 +11,11 @@
         <maven.compiler.target>21</maven.compiler.target>
         <exec.mainClass>br.unipar.manipulador.Manipulador</exec.mainClass>
     </properties>
+    <dependencies>
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>5.5.1</version>
+        </dependency>
+    </dependencies>
 </project>

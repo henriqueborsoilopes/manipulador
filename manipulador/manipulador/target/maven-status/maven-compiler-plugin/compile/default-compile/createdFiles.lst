@@ -1,1 +1,7 @@
+br\unipar\manipulador\entidade\Pessoa.class
 br\unipar\manipulador\Manipulador.class
+br\unipar\manipulador\entidade\Endereco.class
+br\unipar\manipulador\entidade\Caracteristica.class
+br\unipar\manipulador\entidade\enumedo\TipoTelefone.class
+br\unipar\manipulador\entidade\enumedo\TipoSanguinio.class
+br\unipar\manipulador\entidade\Telefone.class
