@@ -1,9 +1,19 @@
-package br.unipar.manipulador.entidade;
+package br.unipar.manipulador.modelo.entidade;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import java.util.Objects;
 
+@Entity
+@Table(name = "tb_endereco")
 public class Endereco {
     
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String cep;	
     private String rua;	
@@ -12,9 +22,12 @@ public class Endereco {
     private String cidade;	
     private String estado;
     
+    @OneToOne
+    private Pessoa pessoa;
+    
     public Endereco() { }
 
-    public Endereco(Long id, String cep, String rua, String numero, String bairro, String cidade, String estado) {
+    public Endereco(Long id, String cep, String rua, String numero, String bairro, String cidade, String estado, Pessoa pessoa) {
         this.id = id;
         this.cep = cep;
         this.rua = rua;
@@ -22,6 +35,7 @@ public class Endereco {
         this.bairro = bairro;
         this.cidade = cidade;
         this.estado = estado;
+        this.pessoa = pessoa;
     }
 
     public Long getId() {
@@ -78,6 +92,14 @@ public class Endereco {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public Pessoa getPessoa() {
+        return pessoa;
+    }
+
+    public void setPessoa(Pessoa pessoa) {
+        this.pessoa = pessoa;
     }
 
     @Override

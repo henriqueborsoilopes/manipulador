@@ -1,36 +1,54 @@
-package br.unipar.manipulador.entidade;
+package br.unipar.manipulador.modelo.entidade;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "tb_pessoa")
 public class Pessoa {
     
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;	
     private int idade;	
     private String cpf;
     private String rg;	
-    private LocalDate data_nasc;
+    private LocalDate dataNasc;
     private String mae;	
     private String pai;	
     private String email;	
     private String senha;
     
+    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Endereco endereco;
+    
+    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Caracteristica caracteristica;
+    
+    @OneToMany(mappedBy = "pessoa", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private List<Telefone> telefones = new ArrayList<>();
         
     public Pessoa() { }
     
-    public Pessoa(Long id, String nome, int idade, String cpf, String rg, LocalDate data_nasc, String mae, String pai, String email, String senha, Endereco endereco, Caracteristica caracteristica) {
+    public Pessoa(Long id, String nome, int idade, String cpf, String rg, LocalDate dataNasc, String mae, String pai, String email, String senha, Endereco endereco, Caracteristica caracteristica) {
         this.id = id;
         this.nome = nome;
         this.idade = idade;
         this.cpf = cpf;
         this.rg = rg;
-        this.data_nasc = data_nasc;
+        this.dataNasc = dataNasc;
         this.mae = mae;
         this.pai = pai;
         this.email = email;
@@ -79,12 +97,12 @@ public class Pessoa {
         this.rg = rg;
     }
 
-    public LocalDate getData_nasc() {
-        return data_nasc;
+    public LocalDate getDataNasc() {
+        return dataNasc;
     }
 
-    public void setData_nasc(LocalDate data_nasc) {
-        this.data_nasc = data_nasc;
+    public void setDataNasc(LocalDate dataNasc) {
+        this.dataNasc = dataNasc;
     }
 
     public String getMae() {

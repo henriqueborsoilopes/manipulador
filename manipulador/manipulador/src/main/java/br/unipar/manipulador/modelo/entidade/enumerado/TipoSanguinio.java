@@ -1,4 +1,4 @@
-package br.unipar.manipulador.entidade.enumedo;
+package br.unipar.manipulador.modelo.entidade.enumerado;
 
 public enum TipoSanguinio {
     
