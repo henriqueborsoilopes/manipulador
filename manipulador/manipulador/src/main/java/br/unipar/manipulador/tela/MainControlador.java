@@ -1,10 +1,14 @@
 package br.unipar.manipulador.tela;
+
 import br.unipar.manipulador.modelo.entidade.Pessoa;
 import br.unipar.manipulador.modelo.repositorio.PessoaRepositorio;
 import br.unipar.manipulador.modelo.servico.PessoaServico;
 import br.unipar.manipulador.modelo.dto.PaginaDTO;
 import br.unipar.manipulador.modelo.infra.ConexaoBD;
+import br.unipar.manipulador.modelo.servico.excecao.ArquivoExcecao;
 import br.unipar.manipulador.modelo.util.ArquivoUtil;
+import br.unipar.manipulador.modelo.util.BarraProgresso;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -16,66 +20,67 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class MainControlador extends javax.swing.JFrame {
-    
+
     private String pesquisarNome = "";
-   
+
     private PaginaDTO<Pessoa> pagina = new PaginaDTO<>(0, 22, 0);
-    
+
     public MainControlador() {
         ConexaoBD.getEntityManagerFactory();
         initComponents();
         setLocationRelativeTo(null);
-        setExtendedState(MainControlador.MAXIMIZED_BOTH);
+        setExtendedState(MainControlador.MAXIMIZED_HORIZ);
         carregarTabela();
-        
+
         JMenuBar menuBar = new JMenuBar();
-        
+
         JMenu menuPessoa = new JMenu("Pessoa");
-        
+
         JMenuItem itemImporta = new JMenuItem("Importar CSV");
         JMenuItem itemExporta = new JMenuItem("Exportar CSV");
 
         menuPessoa.add(itemImporta);
         menuPessoa.add(itemExporta);
-        
+
         menuBar.add(menuPessoa);
-        
+
         setJMenuBar(menuBar);
-        
+
         itemImporta.addActionListener((ActionEvent e) -> {
-            abrirImportaArquivoControlador();
+            abrirArquivo();
         });
-        
+
         itemExporta.addActionListener((ActionEvent e) -> {
-            new PessoaServico(new PessoaRepositorio()).gerarArquivoCSV(pagina.getConteudo(), ArquivoUtil.gerarArquivoCSV(ArquivoUtil.gerarPasta()));
+            escolherDiretorio();
         });
-        
+
         tabelaClientes.setRowHeight(29);
         txtNumPagina.setText(String.valueOf(pagina.getNumPagina() + 1));
         btAnterior.setText("← " + String.valueOf(pagina.getNumPagina() + 1));
         btAnterior.setEnabled(false);
         btProximo.setText(pagina.getPaginaAtual() + " →");
-        
+
         txtPesquisar.requestFocus();
         txtPesquisar.addKeyListener(keyPressed());
-        
+
         btAnterior.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 paginaAnterior();
             }
         });
-        
+
         btProximo.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 proximaPagina();
-          }
+            }
         });
-        
+
         btPesquisar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -83,20 +88,23 @@ public class MainControlador extends javax.swing.JFrame {
             }
         });
     }
-        
+
     private KeyAdapter keyPressed() {
         return new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
-                    case KeyEvent.VK_ENTER -> pesquisar();
-                    case KeyEvent.VK_LEFT-> paginaAnterior();
-                    case KeyEvent.VK_RIGHT -> proximaPagina();
+                    case KeyEvent.VK_ENTER ->
+                        pesquisar();
+                    case KeyEvent.VK_LEFT ->
+                        paginaAnterior();
+                    case KeyEvent.VK_RIGHT ->
+                        proximaPagina();
                 }
             }
         };
     }
-    
+
     public void paginaAnterior() {
         if (btAnterior.isEnabled()) {
             int numPg = pagina.getNumPagina();
@@ -112,7 +120,7 @@ public class MainControlador extends javax.swing.JFrame {
             }
         }
     }
-    
+
     public void proximaPagina() {
         if (btProximo.isEnabled()) {
             btAnterior.setEnabled(true);
@@ -128,7 +136,7 @@ public class MainControlador extends javax.swing.JFrame {
             }
         }
     }
-    
+
     public void pesquisar() {
         pesquisarNome = txtPesquisar.getText();
         pagina.setNumPagina(0);
@@ -151,24 +159,95 @@ public class MainControlador extends javax.swing.JFrame {
         MainPessoaTabelaModelo modelo = new MainPessoaTabelaModelo(pagina.getConteudo());
         tabelaClientes.setModel(modelo);
     }
-    
-    public void abrirImportaArquivoControlador() {
+
+    public void abrirArquivo() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fileChooser.setAcceptAllFileFilterUsed(false);
         fileChooser.setFileFilter(new FileNameExtensionFilter("CSV Arquivos", "csv"));
 
-        int returnValue = fileChooser.showOpenDialog(MainControlador.this);
+        int returnValue = fileChooser.showOpenDialog(this);
 
         if (returnValue == JFileChooser.APPROVE_OPTION) {
-            PessoaServico servico = new PessoaServico(new PessoaRepositorio());
             File arquivo = fileChooser.getSelectedFile();
-            for (Pessoa pessoa : servico.csvParaEntidade(arquivo)) {
-                servico.inserir(pessoa);
-            }
+            BarraProgresso barra = new BarraProgresso(this);
+            
+            SwingWorker<Void, Void> worker = new SwingWorker<>() {
+                @Override
+                protected Void doInBackground() {
+                    try {
+                        PessoaServico servico = new PessoaServico(new PessoaRepositorio());
+                        for (Pessoa pessoa : servico.csvParaEntidade(arquivo)) {
+                            servico.inserir(pessoa);
+                        }
+                        JOptionPane.showConfirmDialog(MainControlador.this,"Arquivo importado com sucesso!", "Confimação", JOptionPane.OK_OPTION);
+                    } catch (HeadlessException e) {
+                        JOptionPane.showMessageDialog(MainControlador.this,
+                                "Erro ao processar o arquivo: " + e.getMessage(),
+                                "Erro",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                    return null;
+                }
+
+                @Override
+                protected void done() {
+                    barra.dispose();
+                }
+            };
+            
+            worker.execute();
+            barra.setVisible(true);
+            carregarTabela();
         }
     }
-    
+
+    public void escolherDiretorio() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        int returnValue = fileChooser.showOpenDialog(this);
+
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File selectedDir = fileChooser.getSelectedFile();
+            BarraProgresso barra = new BarraProgresso(this);
+
+            SwingWorker<Void, Void> worker = new SwingWorker<>() {
+                @Override
+                protected Void doInBackground() {
+                    try {
+                        File pasta = ArquivoUtil.gerarArquivoCSV(selectedDir, false);
+                        new PessoaServico(new PessoaRepositorio()).gerarArquivoCSV(pagina.getConteudo(), pasta);
+                        JOptionPane.showConfirmDialog(MainControlador.this, "Arquivo exportado com sucesso!", "Confimação", JOptionPane.OK_OPTION);
+                    } catch (ArquivoExcecao e) {
+                        if (e.isArquivoExiste()) {
+                            int resposta = JOptionPane.showConfirmDialog(MainControlador.this, e.getMessage(), "Aviso", JOptionPane.OK_CANCEL_OPTION);
+                            if (resposta == JOptionPane.OK_OPTION) {
+                                File pasta = ArquivoUtil.gerarArquivoCSV(selectedDir, true);
+                                try {
+                                    new PessoaServico(new PessoaRepositorio()).gerarArquivoCSV(pagina.getConteudo(), pasta);
+                                    JOptionPane.showConfirmDialog(MainControlador.this, e.getMessage(), "Arquivo exportado com sucesso!", JOptionPane.OK_OPTION);
+                                } catch (HeadlessException ex) {
+                                    JOptionPane.showMessageDialog(MainControlador.this,"Erro ao processar o arquivo: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                                }
+                            }
+                        } else {
+                            JOptionPane.showConfirmDialog(MainControlador.this, e.getMessage(), "Erro", JOptionPane.OK_OPTION);
+                        }
+                    }
+                    return null;
+                }
+
+                @Override
+                protected void done() {
+                    barra.dispose();
+                }
+            };
+
+            worker.execute();
+            barra.setVisible(true);
+        }
+    }
+
     @Override
     public void dispose() {
         int resposta = JOptionPane.showConfirmDialog(MainControlador.this, "Deseja realmente fechar a janela?", "Confirmação", JOptionPane.YES_NO_OPTION);
@@ -194,6 +273,7 @@ public class MainControlador extends javax.swing.JFrame {
         btProximo = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setAlwaysOnTop(true);
         setMinimumSize(new java.awt.Dimension(900, 500));
         setResizable(false);
 

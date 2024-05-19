@@ -99,7 +99,32 @@ public class PessoaServico {
     
     public void gerarArquivoCSV(List<Pessoa> pessoas, File arquivo) {
         try (FileWriter fw = new FileWriter(arquivo);
-             BufferedWriter buffer = new BufferedWriter(fw)) {
+            BufferedWriter buffer = new BufferedWriter(fw)) {
+            buffer.write("Id;");
+            buffer.write("Nome;");
+            buffer.write("Idade;");
+            buffer.write("CPF;");
+            buffer.write("RG;");
+            buffer.write("Data Nascimento;");
+            buffer.write("Sexo;");
+            buffer.write("Signo;");
+            buffer.write("Mãe;");
+            buffer.write("Pai;");
+            buffer.write("E-mail;");
+            buffer.write("Senha;");
+            buffer.write("CEP;");
+            buffer.write("Rua;");
+            buffer.write("Número;");
+            buffer.write("Bairro;");
+            buffer.write("Cidade;");
+            buffer.write("Estado;");
+            buffer.write("Telefone;");
+            buffer.write("Celular;");
+            buffer.write("Altura;");
+            buffer.write("Peso;");
+            buffer.write("Tipo Sanguineo;");
+            buffer.write("Cor;");
+            buffer.newLine();
             for (Pessoa pessoa : pessoas) {   
                 buffer.write(pessoa.getId().toString() + ";");
                 buffer.write(pessoa.getNome() + ";");

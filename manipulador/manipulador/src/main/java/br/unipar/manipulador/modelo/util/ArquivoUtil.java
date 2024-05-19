@@ -1,27 +1,23 @@
 package br.unipar.manipulador.modelo.util;
 
+import br.unipar.manipulador.modelo.servico.excecao.ArquivoExcecao;
 import java.io.File;
 import java.io.IOException;
 
 public class ArquivoUtil {
-    
-    public static File gerarPasta() {
-        File pasta = new File("C:\\Projetos\\manipulador");
-        if (!pasta.exists() && !pasta.isDirectory()) {
-            pasta.mkdir();
-        }
-        return pasta;
-    }
-    
-    public static File gerarArquivoCSV(File pasta) {
-        File arquivo = new File(pasta.getPath(), "dados.csv");
-        if (!arquivo.exists()) {
+        
+    public static File gerarArquivoCSV(File pasta, boolean substituir) {
+        pasta = new File(pasta, "dados.csv");
+        if (!pasta.exists()) {
             try {
-                arquivo.createNewFile();
+                pasta.createNewFile();
+                return pasta;
             } catch (IOException e) {
-                System.out.println("Erro ao criar o arquivo: " + e.getMessage());
+                throw new ArquivoExcecao("Erro ao criar o arquivo: " + e.getMessage(), false);
             }
+        } else if (substituir) {
+            return pasta;
         }
-        return arquivo;
+        throw new ArquivoExcecao("Arquivo já existe. Deseja substituir?", true);
     }
 }

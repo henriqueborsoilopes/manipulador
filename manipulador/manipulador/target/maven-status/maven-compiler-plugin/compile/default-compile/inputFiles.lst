@@ -1,4 +1,5 @@
 C:\Projetos\manipulador\manipulador\manipulador\src\main\java\br\unipar\manipulador\Manipulador.java
+C:\Projetos\manipulador\manipulador\manipulador\src\main\java\br\unipar\manipulador\modelo\servico\excecao\ArquivoExcecao.java
 C:\Projetos\manipulador\manipulador\manipulador\src\main\java\br\unipar\manipulador\tela\MainControlador.java
 C:\Projetos\manipulador\manipulador\manipulador\src\main\java\br\unipar\manipulador\modelo\util\FormatarUtil.java
 C:\Projetos\manipulador\manipulador\manipulador\src\main\java\br\unipar\manipulador\modelo\dto\PaginaDTO.java
@@ -8,6 +9,7 @@ C:\Projetos\manipulador\manipulador\manipulador\src\main\java\br\unipar\manipula
 C:\Projetos\manipulador\manipulador\manipulador\src\main\java\br\unipar\manipulador\modelo\servico\PessoaServico.java
 C:\Projetos\manipulador\manipulador\manipulador\src\main\java\br\unipar\manipulador\modelo\entidade\Pessoa.java
 C:\Projetos\manipulador\manipulador\manipulador\src\main\java\br\unipar\manipulador\modelo\entidade\Telefone.java
+C:\Projetos\manipulador\manipulador\manipulador\src\main\java\br\unipar\manipulador\modelo\util\BarraProgresso.java
 C:\Projetos\manipulador\manipulador\manipulador\src\main\java\br\unipar\manipulador\modelo\entidade\enumerado\TipoTelefone.java
 C:\Projetos\manipulador\manipulador\manipulador\src\main\java\br\unipar\manipulador\modelo\util\ArquivoUtil.java
 C:\Projetos\manipulador\manipulador\manipulador\src\main\java\br\unipar\manipulador\modelo\entidade\enumerado\TipoSanguinio.java

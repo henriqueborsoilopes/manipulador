@@ -1,6 +1,8 @@
+br\unipar\manipulador\modelo\util\BarraProgresso.class
 br\unipar\manipulador\modelo\entidade\enumerado\TipoTelefone.class
 br\unipar\manipulador\tela\MainControlador$3.class
 br\unipar\manipulador\tela\MainControlador$1.class
+br\unipar\manipulador\tela\MainControlador$6.class
 br\unipar\manipulador\modelo\entidade\enumerado\TipoSanguinio.class
 br\unipar\manipulador\tela\MainControlador$2.class
 br\unipar\manipulador\tela\MainControlador.class
@@ -8,7 +10,9 @@ br\unipar\manipulador\tela\MainPessoaTabelaModelo.class
 br\unipar\manipulador\modelo\entidade\Endereco.class
 br\unipar\manipulador\modelo\infra\ConexaoBD.class
 br\unipar\manipulador\Manipulador.class
+br\unipar\manipulador\tela\MainControlador$5.class
 br\unipar\manipulador\modelo\dto\PaginaDTO.class
+br\unipar\manipulador\modelo\servico\excecao\ArquivoExcecao.class
 br\unipar\manipulador\modelo\util\ArquivoUtil.class
 br\unipar\manipulador\tela\MainControlador$4.class
 br\unipar\manipulador\modelo\entidade\Pessoa.class
