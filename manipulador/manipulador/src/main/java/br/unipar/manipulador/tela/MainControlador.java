@@ -20,8 +20,12 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableCellRenderer;
 
 public class MainControlador extends javax.swing.JFrame {
 
@@ -32,10 +36,10 @@ public class MainControlador extends javax.swing.JFrame {
     public MainControlador() {
         ConexaoBD.getEntityManagerFactory();
         initComponents();
-        setLocationRelativeTo(null);
-        setExtendedState(MainControlador.MAXIMIZED_HORIZ);
+        jScrollPane1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        tabelaClientes.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         carregarTabela();
-
+                
         JMenuBar menuBar = new JMenuBar();
 
         JMenu menuPessoa = new JMenu("Pessoa");
@@ -158,6 +162,22 @@ public class MainControlador extends javax.swing.JFrame {
         pagina = new PessoaServico(new PessoaRepositorio()).acharTodosPaginado(pesquisarNome, pagina.getNumPagina(), pagina.getTamPagina());
         MainPessoaTabelaModelo modelo = new MainPessoaTabelaModelo(pagina.getConteudo());
         tabelaClientes.setModel(modelo);
+        for (int columnIndex = 0; columnIndex < tabelaClientes.getColumnCount(); columnIndex++) {
+            tabelaClientes.getColumnModel().getColumn(columnIndex).setPreferredWidth(150);
+            tabelaClientes.getColumnModel().getColumn(columnIndex).setCellRenderer(new DefaultTableCellRenderer());
+            tabelaClientes.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            tabelaClientes.doLayout();
+            int width = (int) tabelaClientes.getTableHeader().getDefaultRenderer()
+                    .getTableCellRendererComponent(tabelaClientes, tabelaClientes.getColumnModel().getColumn(columnIndex).getHeaderValue(), false, false, -1, columnIndex)
+                    .getPreferredSize().getWidth();
+            for (int row = 0; row < tabelaClientes.getRowCount(); row++) {
+                int preferedWidth = (int) tabelaClientes.getCellRenderer(row, columnIndex)
+                        .getTableCellRendererComponent(tabelaClientes, tabelaClientes.getValueAt(row, columnIndex), false, false, row, columnIndex)
+                        .getPreferredSize().getWidth();
+                width = Math.max(width, preferedWidth);
+            }
+            tabelaClientes.getColumnModel().getColumn(columnIndex).setPreferredWidth(width + 20);
+        }
     }
 
     public void abrirArquivo() {
@@ -337,9 +357,12 @@ public class MainControlador extends javax.swing.JFrame {
 
             }
         ));
+        tabelaClientes.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         tabelaClientes.setRowHeight(40);
         tabelaClientes.setShowGrid(true);
+        tabelaClientes.setSurrendersFocusOnKeystroke(true);
         jScrollPane1.setViewportView(tabelaClientes);
+        tabelaClientes.getAccessibleContext().setAccessibleDescription("");
 
         jPanel3.setBackground(new java.awt.Color(102, 102, 102));
 
