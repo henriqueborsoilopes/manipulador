@@ -145,6 +145,10 @@ public class MainControlador extends javax.swing.JFrame {
         pesquisarNome = txtPesquisar.getText();
         pagina.setNumPagina(0);
         carregarTabela();
+        
+    }
+    
+    public void atualizarBtnProximoAnterior() {
         txtNumPagina.setText(String.valueOf(pagina.getNumPagina() + 1));
         btAnterior.setText("← " + String.valueOf(pagina.getNumPagina() + 1));
         btAnterior.setEnabled(false);
@@ -177,6 +181,7 @@ public class MainControlador extends javax.swing.JFrame {
                 width = Math.max(width, preferedWidth);
             }
             tabelaClientes.getColumnModel().getColumn(columnIndex).setPreferredWidth(width + 20);
+            
         }
     }
 
@@ -219,6 +224,7 @@ public class MainControlador extends javax.swing.JFrame {
             worker.execute();
             barra.setVisible(true);
             carregarTabela();
+            atualizarBtnProximoAnterior();
         }
     }
 
